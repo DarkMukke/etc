@@ -60,10 +60,10 @@ function smiley {
 	local res=$?
 	if [ "$res" == "0" ]; then
 		SMCOL=${BLD}${COLGRN}
-		SMILE="●"
+		SMILE=":-)"
 	else
 		SMCOL=${BLD}${COLRED}
-		SMILE="●"
+		SMILE=":'("
 	fi
 	echo -ne ${SMCOL}${SMILE}
 	return $res
@@ -79,8 +79,10 @@ function scmbranch {
 				GITBRANCH=${GITBRANCH##*/}
 				if [ ${GITBRANCH} == "master" ]; then
 					GITBRANCH="${REG}${COLGRN}--${GITBRANCH}${TXRES}${BLD}${COLYLW}-git"
-				else
+				elif [ ${GITBRANCH} == "hotfix" ]; then
 					GITBRANCH="${REG}${COLRED}--${GITBRANCH}${TXRES}${BLD}${COLYLW}-git"
+				else
+					GITBRANCH="${REG}${COLBLU}--${GITBRANCH}${TXRES}${BLD}${COLYLW}-git"
 				fi
 				echo -ne ${GITBRANCH}
 			fi
@@ -97,6 +99,23 @@ function scmbranch {
 				echo -ne ${HGBRANCH}
 			fi
 		fi
+		if which svn > /dev/null 2>&1; then
+                        svn info > /dev/null 2>&1
+                        if [ $? -eq 0 ]; then
+			        SVNBRANCH=$(svn info | sed -ne 's/^URL: //p')
+				SVNBRANCHROOT=$(svn info | sed -ne 's/^Repository Root: //p')
+                                SVNTAG=${SVNBRANCH//$SVNBRANCHROOT}
+				if [ -z "$SVNTAG" ] || [ ${SVNTAG} == "" ]; then
+					SVNTAG="/trunk"
+				fi
+				if [ ${SVNTAG} == "/trunk" ]; then
+                                        SVNBRANCH="${REG}${COLGRN}--${SVNTAG}${TXRES}${BLD}${COLYLW}-svn"
+                                else
+                                        SVNBRANCH="${REG}${COLRED}--${SVNTAG}${TXRES}${BLD}${COLYLW}-svn"
+                                fi
+                                echo -ne ${SVNBRANCH}
+                        fi
+                fi
 	fi
 	return $res
 }
@@ -104,14 +123,12 @@ function scmbranch {
 function fldcol {
 	local res=$?
 	if [ `id -u` != "0" ]; then
-		if [[ $PWD =~ \/herecura ]]; then
+		if [[ $PWD =~ \/Sites ]]; then
 			FLDCOL=${BLD}${COLBLK}${UND}${COLYLW};
-		elif [[ $PWD =~ \/scripts ]]; then
+		elif [[ $PWD =~ \/projects ]]; then
 			FLDCOL=${BLD}${COLBLK}${UND}${COLBLU}
-		elif [[ $PWD =~ \/vimfiles ]]; then
+		elif [[ $PWD =~ \/PROD ]]; then
 			FLDCOL=${BLD}${COLBLK}${UND}${COLPUR}
-		elif [[ $PWD =~ \/devel ]]; then
-			FLDCOL=${BLD}${COLBLK}${UND}${COLWHT}
 		fi
 	fi
 
