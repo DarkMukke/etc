@@ -71,52 +71,50 @@ function smiley {
 
 function scmbranch {
 	local res=$?
-	if [ `id -u` != "0" ]; then
-		if which git > /dev/null 2>&1; then
-			git symbolic-ref HEAD > /dev/null 2>&1
-			if [ $? -eq 0 ]; then
-				GITBRANCH=$(git symbolic-ref HEAD 2>/dev/null)
-				GITBRANCH=${GITBRANCH##*/}
-				if [ ${GITBRANCH} == "master" ]; then
-					GITBRANCH="${REG}${COLGRN}--${GITBRANCH}${TXRES}${BLD}${COLYLW}-git"
-				elif [ ${GITBRANCH} == "hotfix" ]; then
-					GITBRANCH="${REG}${COLRED}--${GITBRANCH}${TXRES}${BLD}${COLYLW}-git"
-				else
-					GITBRANCH="${REG}${COLBLU}--${GITBRANCH}${TXRES}${BLD}${COLYLW}-git"
-				fi
-				echo -ne ${GITBRANCH}
+	if which git > /dev/null 2>&1; then
+		git symbolic-ref HEAD > /dev/null 2>&1
+		if [ $? -eq 0 ]; then
+			GITBRANCH=$(git symbolic-ref HEAD 2>/dev/null)
+			GITBRANCH=${GITBRANCH##*/}
+			if [ ${GITBRANCH} == "master" ]; then
+				GITBRANCH="${REG}${COLGRN}--${GITBRANCH}${TXRES}${BLD}${COLYLW}-git"
+			elif [ ${GITBRANCH} == "hotfix" ]; then
+				GITBRANCH="${REG}${COLRED}--${GITBRANCH}${TXRES}${BLD}${COLYLW}-git"
+			else
+				GITBRANCH="${REG}${COLBLU}--${GITBRANCH}${TXRES}${BLD}${COLYLW}-git"
 			fi
+			echo -ne ${GITBRANCH}
 		fi
-		if which hg > /dev/null 2>&1; then
-			hg branch > /dev/null 2>&1
-			if [ $? -eq 0 ]; then
-				HGBRANCH=$(hg branch 2>/dev/null)
-				if [ ${HGBRANCH} == "default" ]; then
-					HGBRANCH="${REG}${COLGRN}--${HGBRANCH}${TXRES}${BLD}${COLYLW}-hg"
-				else
-					HGBRANCH="${REG}${COLGRN}--${HGBRANCH}${TXRES}${BLD}${COLYLW}-hg"
-				fi
-				echo -ne ${HGBRANCH}
-			fi
-		fi
-		if which svn > /dev/null 2>&1; then
-                        svn info > /dev/null 2>&1
-                        if [ $? -eq 0 ]; then
-			        SVNBRANCH=$(svn info | sed -ne 's/^URL: //p')
-				SVNBRANCHROOT=$(svn info | sed -ne 's/^Repository Root: //p')
-                                SVNTAG=${SVNBRANCH//$SVNBRANCHROOT}
-				if [ -z "$SVNTAG" ] || [ ${SVNTAG} == "" ]; then
-					SVNTAG="/trunk"
-				fi
-				if [ ${SVNTAG} == "/trunk" ]; then
-                                        SVNBRANCH="${REG}${COLGRN}--${SVNTAG}${TXRES}${BLD}${COLYLW}-svn"
-                                else
-                                        SVNBRANCH="${REG}${COLRED}--${SVNTAG}${TXRES}${BLD}${COLYLW}-svn"
-                                fi
-                                echo -ne ${SVNBRANCH}
-                        fi
-                fi
 	fi
+	if which hg > /dev/null 2>&1; then
+		hg branch > /dev/null 2>&1
+		if [ $? -eq 0 ]; then
+			HGBRANCH=$(hg branch 2>/dev/null)
+			if [ ${HGBRANCH} == "default" ]; then
+				HGBRANCH="${REG}${COLGRN}--${HGBRANCH}${TXRES}${BLD}${COLYLW}-hg"
+			else
+				HGBRANCH="${REG}${COLGRN}--${HGBRANCH}${TXRES}${BLD}${COLYLW}-hg"
+			fi
+			echo -ne ${HGBRANCH}
+		fi
+	fi
+	if which svn > /dev/null 2>&1; then
+                svn info > /dev/null 2>&1
+                if [ $? -eq 0 ]; then
+		        SVNBRANCH=$(svn info | sed -ne 's/^URL: //p')
+			SVNBRANCHROOT=$(svn info | sed -ne 's/^Repository Root: //p')
+                        SVNTAG=${SVNBRANCH//$SVNBRANCHROOT}
+			if [ -z "$SVNTAG" ] || [ ${SVNTAG} == "" ]; then
+				SVNTAG="/trunk"
+			fi
+			if [ ${SVNTAG} == "/trunk" ]; then
+                                SVNBRANCH="${REG}${COLGRN}--${SVNTAG}${TXRES}${BLD}${COLYLW}-svn"
+                        else
+                                SVNBRANCH="${REG}${COLRED}--${SVNTAG}${TXRES}${BLD}${COLYLW}-svn"
+                        fi
+                        echo -ne ${SVNBRANCH}
+                fi
+        fi
 	return $res
 }
 
@@ -165,29 +163,17 @@ else
 	hostname=$(cat /proc/sys/kernel/hostname)
 fi
 case $hostname in
-	BlackRaptor)
+	localhost)
 		HSTCOL=${BLD}${COLBLK}${BGRED}${COLWHT}
 	;;
-	BlackOwl)
+	deployer)
 		HSTCOL=${BLD}${COLBLK}${BGRED}${COLYLW}
 	;;
-	BlackFalcon)
+	server*.junowebdesign.com)
 		HSTCOL=${BLD}${COLGRN}
 	;;
-	BlackEagle)
+	*.juno.is)
 		HSTCOL=${BLD}${COLCYN}
-	;;
-	BlackPidgin)
-		HSTCOL=${BLD}${COLPUR}
-	;;
-	BlackHarrier)
-		HSTCOL=${BLD}${COLWHT}
-	;;
-	BlackHawk)
-		HSTCOL=${BLD}${COLBLK}${BGGRN}${COLWHT}
-	;;
-	BlackKite)
-		HSTCOL=${BLD}${COLBLK}${BGGRN}${COLYLW}
 	;;
 	*)
 		HSTCOL=${PSCOL}
