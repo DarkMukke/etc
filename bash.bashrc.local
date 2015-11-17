@@ -5,6 +5,9 @@
 # add .bin to path if found in home
 [ -d ~/.bin ] && PATH=$PATH:~/.bin
 
+#add local composer bin
+[ -d ~/.composer/vendor/bin/ ] && PATH=$PATH:~/.composer/vendor/bin/
+
 # If not running interactively, stop here
 [[ $- != *i* ]] && return
 
