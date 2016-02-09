@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+#       /etc/rc.d/init.d/monitis
+#
+# monitis  Monitis init.d script for Monitis.com
+# description: Install Monitis from http://www.monitis.com/support/server-device-monitoring/install-linux-agent/
+# processname: montitis
+# chkconfig: 345 70 30
+
+# Source function library.
+. /etc/init.d/functions
+
+RETVAL=0
+
+name="Monitis"
+proc="monitis"
+script="/opt/monitis/monitis.sh"
+
+start() {
+        echo -n "Starting $name: "
+        ${script} start
+        touch /var/lock/subsys/$proc
+        return $RETVAL
+}
+
+stop() {
+        echo -n "Shutting down $name: "
+        ${script} stop
+        rm -f /var/lock/subsys/$proc
+        return $RETVAL
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop 
+        ;;
+    status)
+        ${script} status 
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    reload)
+	stop
+	start
+        ;;
+    *)
+        echo "Usage: monitis {start|stop|status|restart]"
+        exit 1
+        ;;
+esac
+exit $RETVAL
