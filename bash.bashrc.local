@@ -170,13 +170,13 @@ case $hostname in
 	localhost)
 		HSTCOL=${BLD}${COLBLK}${BGRED}${COLWHT}
 	;;
-	deployer)
+	ip-172-31-41-102)
 		HSTCOL=${BLD}${COLBLK}${BGRED}${COLYLW}
 	;;
-	server*.junowebdesign.com)
+	*.freefrictionshaving.com)
 		HSTCOL=${BLD}${COLGRN}
 	;;
-	*.juno.is)
+	*.ffs.co.uk)
 		HSTCOL=${BLD}${COLCYN}
 	;;
 	*)
