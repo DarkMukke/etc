@@ -197,13 +197,13 @@ case $hostname in
 	localhost)
 		HSTCOL=${BLD}${COLBLK}${BGRED}${COLWHT}
 	;;
-	ip-172-31-41-102)
+	*.testing)
 		HSTCOL=${BLD}${COLBLK}${BGRED}${COLYLW}
 	;;
-	*.freefrictionshaving.com)
+	*.staging)
 		HSTCOL=${BLD}${COLGRN}
 	;;
-	*.ffs.co.uk)
+	*.production)
 		HSTCOL=${BLD}${COLCYN}
 	;;
 	*)
